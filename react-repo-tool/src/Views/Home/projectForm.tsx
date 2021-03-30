@@ -1,6 +1,9 @@
 import React from 'react';
-import { Form, Input, Button, InputNumber } from 'antd';
+import { Form, Input, Button, InputNumber, DatePicker, message } from 'antd';
 import style from './projectForm.less';
+import {
+  LikeTwoTone,
+} from '@ant-design/icons';
 
 // const { Option } = Select;
 
@@ -10,63 +13,52 @@ const layout = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: { offset: 6, span: 16 },
 };
 
-export default function ProjectForm(props: { getAllProject: any; }): JSX.Element {
+export default function ProjectForm(props: { getProjectcommitsWithBranches: any; }): JSX.Element {
 
   const [form] = Form.useForm();
 
-  // const onGenderChange = (value: string) => {
-  //   switch (value) {
-  //     case 'male':
-  //       form.setFieldsValue({
-  //         note: "man!"
-  //       });
-  //       return;
-  //     case 'female':
-  //       form.setFieldsValue({
-  //         note: 'women!'
-  //       });
-  //       return;
-  //     case 'other':
-  //       form.setFieldsValue({
-  //         note: 'hello!!'
-  //       });
-  //       return;
-  //   }
-  // };
-
   const onReset = () => {
-    form.resetFields();
+    message.warning({
+      icon: <LikeTwoTone />,
+      content: '正在开发中！(๑•̀ㅂ•́)و✧'
+    });
   };
+
+  // const onChange = (date, dateString) => {
+  //   console.log(date, dateString);
+  // };
 
   const onFinish = (value: any) => {
     console.log(value);
-    props.getAllProject(value);
+    console.log(new Date(value.since));
+    value.since = new Date(value.since);
+    if (value.until) value.until = new Date(value.until);
+    props.getProjectcommitsWithBranches(value);
   };
   return (
     <Form className={style} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
-      <Form.Item name="private_token" label="Token" rules={[{ required: true }]}>
-        <Input size="small" />
-      </Form.Item>
-      <Form.Item name="per_page" label="项目条数" rules={[{ required: true }]}>
+      <Form.Item name="id" label="项目id" rules={[{ required: true }]}>
         <InputNumber size="small" min={1} max={100000} />
       </Form.Item>
-      {/* <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
-        <Select placeholder="请选择" onChange={onGenderChange} allowClear>
-          <Option value="male">男</Option>
-          <Option value="female">女</Option>
-          <Option value="other">其他</Option>
-        </Select>
-      </Form.Item> */}
+      <Form.Item name="ref_name" label="分支名称" rules={[{ required: true }]}>
+        <Input size="small" />
+      </Form.Item>
+      <Form.Item name="since" label="开始时间" rules={[{ required: true }]}>
+        <DatePicker />
+      </Form.Item>
+      <Form.Item name="until" label="截止时间">
+        <DatePicker />
+      </Form.Item>
       <Form.Item {...tailLayout}>
         <Button style={{ marginRight: '8px' }} type="primary" htmlType="submit">
           {/* 在表单内使用htmlType="submit"提交 */}
           查询
         </Button>
         <Button onClick={onReset}>
-          重置
+          更改默认配置
         </Button>
       </Form.Item>
     </Form >
