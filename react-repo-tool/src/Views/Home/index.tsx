@@ -91,7 +91,7 @@ export default function App(): JSX.Element {
       await res.forEach((item: any) => {
         keys.forEach(key => {
           if (item.message.includes(key) && item.message.indexOf('See merge request') === -1) {
-            arr.push(item);
+            arr.push(handleMessage(item));
           }
         });
       });
@@ -99,6 +99,37 @@ export default function App(): JSX.Element {
       setLintData(arr);
     });
   };
+
+  const handleMessage = (item: any) => {
+    const arr = item.message.split(":");
+    switch (arr[0]) {
+      case 'Feat':
+      case 'feat':
+        item.message = '新增功能：' + arr[1];
+        return item;
+      case 'Style':
+      case 'style':
+        item.message = '修改功能：' + arr[1];
+        return item;
+      case 'Fix':
+      case 'fix':
+        item.message = '修复问题：' + arr[1];
+        return item;
+      case 'Docs':
+      case 'docs':
+        item.message = '编写文档：' + arr[1];
+        return item;
+      case 'Test':
+      case 'test':
+        item.message = '添加测试：' + arr[1];
+        return item;
+
+      default:
+        return item;
+        break;
+    }
+  };
+
   return (
     <Row gutter={16} >
       <Col className="gutter-row" span={16}>
