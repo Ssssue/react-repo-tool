@@ -19,4 +19,10 @@ export default {
       data
     );
   },
+  getProjectcommitsWithBranches(id: number, data: Params): Promise<void> {
+    return config.doGetPromise(
+      `/api/v4/projects/${id}/repository/commits`,
+      data
+    );
+  },
 };
