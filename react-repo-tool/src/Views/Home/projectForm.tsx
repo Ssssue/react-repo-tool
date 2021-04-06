@@ -33,24 +33,27 @@ export default function ProjectForm(props: { getProjectcommitsWithBranches: any;
 
   const onFinish = (value: any) => {
     console.log(value);
-    console.log(new Date(value.since));
-    value.since = new Date(value.since);
-    if (value.until) value.until = new Date(value.until);
+    console.log(new Date('2021-03-30T03:37:16.000Z'));
+    // value.since = new Date(value.since);
+    // if (value.until) value.until = new Date(value.until);
     props.getProjectcommitsWithBranches(value);
   };
   return (
-    <Form className={style} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+    <Form className={style.projectSearch} {...layout} form={form} name="control-hooks" onFinish={onFinish}>
       <Form.Item name="id" label="项目id" rules={[{ required: true }]}>
         <InputNumber size="small" min={1} max={100000} />
+      </Form.Item>
+      <Form.Item name="author_email" label="Email">
+        <Input size="small" />
       </Form.Item>
       <Form.Item name="ref_name" label="分支名称" rules={[{ required: true }]}>
         <Input size="small" />
       </Form.Item>
       <Form.Item name="since" label="开始时间" rules={[{ required: true }]}>
-        <DatePicker />
+        <DatePicker size="small" />
       </Form.Item>
       <Form.Item name="until" label="截止时间">
-        <DatePicker />
+        <DatePicker size="small" />
       </Form.Item>
       <Form.Item {...tailLayout}>
         <Button style={{ marginRight: '8px' }} type="primary" htmlType="submit">
