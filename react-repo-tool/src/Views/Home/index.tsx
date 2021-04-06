@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Table, Card, message } from 'antd';
+import { Row, Col, Table, Card } from 'antd';
 import ProjectForm from './projectForm';
-import {
-  LikeTwoTone,
-} from '@ant-design/icons';
+// import {
+//   LikeTwoTone,
+// } from '@ant-design/icons';
 // import ProjectDetail from './projectDetail';
 import Api from '../../api/index';
 import style from './index.less';
@@ -21,6 +21,7 @@ interface Commits {
   id: number;
   ref_name: string;
   private_token: string;
+  author_email: string;
 }
 // const obj = {
 //   private_token: 'RyxyDxyxzBEtMRWPz5wo',
@@ -66,12 +67,12 @@ export default function App(): JSX.Element {
     });
   };
 
-  const downMessage = () => {
-    message.warning({
-      icon: <LikeTwoTone />,
-      content: '正在开发中！(๑•̀ㅂ•́)و✧'
-    });
-  };
+  // const downMessage = () => {
+  //   message.warning({
+  //     icon: <LikeTwoTone />,
+  //     content: '正在开发中！(๑•̀ㅂ•́)و✧'
+  //   });
+  // };
 
   // const getProjectDetail = async (id: number) => {
   //   console.log(params);
@@ -90,12 +91,11 @@ export default function App(): JSX.Element {
       const keys = ['Feat', 'feat', 'Style', 'style', 'Fix', 'fix', 'Docs', 'docs', 'Test', 'test', 'Chore', 'chore', 'Perf', 'perf', 'Revert', 'revert', 'Refactor', 'refactor', 'Build', 'build', 'Release', 'release', 'CI', 'Safe', 'safe'];
       await res.forEach((item: any) => {
         keys.forEach(key => {
-          if (item.message.includes(key) && item.message.indexOf('See merge request') === -1) {
+          if (item.message.includes(key) && item.message.indexOf('See merge request') === -1 && item.author_email === obj.author_email) {
             arr.push(handleMessage(item));
           }
         });
       });
-      console.log('....arr', arr);
       setLintData(arr);
     });
   };
@@ -123,7 +123,18 @@ export default function App(): JSX.Element {
       case 'test':
         item.message = '添加测试：' + arr[1];
         return item;
-
+      case 'Chore':
+      case 'chore':
+        item.message = '修改非主体功能：' + arr[1];
+        return item;
+      case 'Build':
+      case 'build':
+        item.message = '构造工具的或者外部依赖的改动：' + arr[1];
+        return item;
+      case 'Refactor':
+      case 'refactor':
+        item.message = '重构代码功能：' + arr[1];
+        return item;
       default:
         return item;
         break;
@@ -151,7 +162,7 @@ export default function App(): JSX.Element {
         </div>
       </Col> */}
       <Col className="gutter-row" span={16}>
-        <Card className={style.textContent} title="Commit信息" style={{ width: '100%', height: '300px' }}>
+        <Card className={style.textContent} title="Commit信息（所有信息）" style={{ width: '100%', height: '300px' }}>
           <div className={style.message}>
             {
               commitData.map((item: any) => {
@@ -164,7 +175,8 @@ export default function App(): JSX.Element {
         </Card>
       </Col>
       <Col className="gutter-row" span={8}>
-        <Card className={style.textContent} title="报告信息" extra={<a onClick={downMessage}>格式化</a>} style={{ width: '100%', height: '300px' }}>
+        {/* extra={<a onClick={downMessage}>格式化</a>} */}
+        <Card className={style.textContent} title="格式化信息" style={{ width: '100%', height: '300px' }}>
           <div className={style.message}>
             {
               lintData.map((item: any) => {
