@@ -1,6 +1,7 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router-dom';
+import { Router, Switch } from 'react-router-dom';
 import { routes } from 'src/Router/index';
+import AuthRoute from "./Router/authRoute";
 import history from './history';
 
 
@@ -10,11 +11,7 @@ export default function App(): JSX.Element {
       <Switch>
         {routes.map((item, index) => {
           return (
-            <Route
-              key={index}
-              path={item.path}
-              render={props => <item.component {...props} />}
-            />
+            <AuthRoute key={index} routeData={routes}></AuthRoute>
           );
         })}
       </Switch>
